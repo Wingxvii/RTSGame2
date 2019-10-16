@@ -41,7 +41,8 @@ public class DroidManager : MonoBehaviour
     }
 
     //init a pool of droids to use
-    void InitPool() {
+    void InitPool()
+    {
         for (int counter = 0; counter < Constants.MAX_SUPPLY; counter++)
         {
             Droidpool.Add(GameObject.Instantiate(BaseDroid, Vector3.zero, Quaternion.identity).GetComponent<Droid>());
@@ -55,10 +56,13 @@ public class DroidManager : MonoBehaviour
 
 
     //requests a drone to build, returns time to build
-    float RequestQueue(DroidType type) {
-        if (activeDroidCount < Constants.MAX_SUPPLY) {
+    public float RequestQueue(DroidType type)
+    {
+        if (activeDroidCount < Constants.MAX_SUPPLY)
+        {
 
-            switch (type) {
+            switch (type)
+            {
                 case DroidType.Base:
                     return 5f;
                 default:
@@ -66,7 +70,38 @@ public class DroidManager : MonoBehaviour
                     return -1f;
             }
         }
-        Debug.Log("MAX CAPACITY");
+        Debug.Log("MAX SUPPLY REACHED");
         return -1f;
     }
+
+    //called when drone is requested to be built
+    public void QueueFinished(Barracks home, DroidType type)
+    {
+        switch (type)
+        {
+            case DroidType.Base:
+                SpawnDroid(type, new Vector3(home.gameObject.GetComponent<Transform>().position.x + 8, 2, home.gameObject.GetComponent<Transform>().position.z));
+                break;
+            default:
+                Debug.Log("ERROR: DROID TYPE INVALID");
+                break;
+        }
+    }
+
+    public void SpawnDroid(DroidType type, Vector3 pos) {
+        Droidpool[Droidpool.Count - 1].gameObject.SetActive(true);
+        Droidpool[Droidpool.Count - 1].transform.position = pos;
+
+        ActiveDroidPool.Add(Droidpool[Droidpool.Count - 1]);
+        Droidpool.RemoveAt(Droidpool.Count-1);
+        activeDroidCount++;
+    }
+
+    public void KillDroid(Droid droid) {
+        activeDroidCount--;
+        
+        Droidpool.Add(droid);
+        ActiveDroidPool.Remove(droid);
+    }
 }
+

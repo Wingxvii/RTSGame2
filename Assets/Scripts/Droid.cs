@@ -9,4 +9,7 @@ public class Droid : Selectable
         entity = EntityType.Droid;
     }
 
+    public void OnDeath() {
+        DroidManager.Instance.KillDroid(this);
+    }
 }

@@ -47,6 +47,11 @@ public class Selectable : MonoBehaviour
         //call base function
         BaseFixedUpdate();
     }
+    public void OnDestroy()
+    {
+        //call base function
+        BaseOnDestory();
+    }
 
     public void OnSelect()
     {
@@ -59,11 +64,20 @@ public class Selectable : MonoBehaviour
         halo.enabled = false;
     }
 
+    public void ResetValues()
+    {
+        this.gameObject.transform.position = Vector3.zero;
+        this.gameObject.transform.rotation = Quaternion.identity;
 
+        BaseResetValues();
+    }
 
     //base class overrides
     protected virtual void BaseStart() { }
     protected virtual void BaseUpdate() { }
     protected virtual void BaseFixedUpdate() { }
+    protected virtual void BaseOnDestory() { }
+    protected virtual void BaseResetValues() { }
+
 
 }
